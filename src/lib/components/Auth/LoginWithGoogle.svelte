@@ -6,7 +6,7 @@
 		try {
 			const user = await loginWithGoogle();
 			console.log(user);
-		} catch (e) {
+		} catch (e: any) {
 			if (e.code === 'auth/popup-closed-by-user') {
 				return;
 			}
