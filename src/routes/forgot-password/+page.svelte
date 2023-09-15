@@ -4,9 +4,9 @@
 	import messagesStore from '$lib/stores/messages.store';
 
 	let hideForm = false;
-	const onForgotPassword = async (e: any) => {
+	const onForgotPassword = async (e: SubmitEvent) => {
 		try {
-			const formData = new FormData(e.target);
+			const formData = new FormData(e.target as HTMLFormElement);
 			const email = formData.get('email')?.toString() || '';
 			if (email === '') {
 				messagesStore.showError('Please enter a valid email');

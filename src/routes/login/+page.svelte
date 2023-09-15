@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import AuthForm from '$lib/components/Auth/AuthForm.svelte';
 	import LoginWithGoogle from '$lib/components/Auth/LoginWithGoogle.svelte';
 	import { loginWithEmailAndPassowrd } from '$lib/firebase/auth.client';
+	import { afterLogin } from '$lib/helpers/route.helper';
 	import messagesStore from '$lib/stores/messages.store';
 
-	const onLogin = async (e: any) => {
+	const onLogin = async (e: SubmitEvent) => {
 		try {
-			const formData = new FormData(e.target);
+			const formData = new FormData(e.target as HTMLFormElement);
 			const email = formData.get('email')?.toString() || '';
 			const password = formData.get('password')?.toString() || '';
 			if (email === '' || password === '') {
@@ -15,6 +17,7 @@
 			}
 			const user = await loginWithEmailAndPassowrd(email, password);
 			messagesStore.hide();
+			await afterLogin($page.url);
 		} catch (error: any) {
 			console.log(error);
 			messagesStore.showError('Email or password is incorrect.');
