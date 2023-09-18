@@ -1,6 +1,8 @@
 import { goto } from '$app/navigation';
+import { setUser } from '$lib/firebase/database.client';
 
-export const afterLogin = async (url: URL) => {
+export const afterLogin = async (url: URL, userId: string) => {
 	const route = url.searchParams.get('redirect') || '/';
-	goto(route);
+	await setUser(userId);
+	await goto(route);
 };

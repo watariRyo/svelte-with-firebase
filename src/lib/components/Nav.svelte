@@ -4,6 +4,7 @@
 	import { logout } from '$lib/firebase/auth.client';
 	import messagesStore from '$lib/stores/messages.store';
 	import { afterLogin } from '$lib/helpers/route.helper';
+	import { goto } from '$app/navigation';
 
 	let isOpen = false;
 	const toggleMenu = () => {
@@ -13,7 +14,7 @@
 	const onLogout = async () => {
 		try {
 			await logout();
-			await afterLogin($page.url);
+			goto('/');
 		} catch (e) {
 			console.log(e);
 			messagesStore.showError();
