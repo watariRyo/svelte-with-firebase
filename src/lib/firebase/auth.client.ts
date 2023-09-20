@@ -35,3 +35,21 @@ export const loginWithEmailAndPassowrd = async (email: string, password: string)
 export const mailResetpasswordEmail = async (email: string) => {
 	await sendPasswordResetEmail(getAuth(), email);
 };
+
+export const sendJWTToken = async () => {
+	const auth = getAuth();
+	const user = auth.currentUser;
+
+	if (!user) {
+		return;
+	}
+
+	const token = await user.getIdToken();
+	await fetch('/token', {
+		method: 'POST',
+		body: JSON.stringify({
+			token: token,
+			email: user.email
+		})
+	});
+};

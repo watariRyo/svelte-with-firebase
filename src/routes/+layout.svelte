@@ -4,6 +4,32 @@
 	import '$lib/firebase/firebase.client';
 
 	import messageStore from '$lib/stores/messages.store';
+	import { onMount } from 'svelte';
+	import { sendJWTToken } from '$lib/firebase/auth.client';
+
+	let timerId: string | number | NodeJS.Timeout | undefined;
+
+	const sendServerToken = async () => {
+		try {
+			await sendJWTToken();
+		} catch (e) {
+			clearInterval(timerId);
+			messageStore.showError();
+			console.log(e);
+		}
+	};
+
+	onMount(async () => {
+		try {
+			await sendServerToken();
+			timerId = setInterval(async () => {
+				await sendServerToken();
+			}, 1000 * 10 * 60);
+		} catch (e) {
+			console.log(e);
+			messageStore.showError();
+		}
+	});
 
 	const closeMessage = () => {
 		messageStore.hide();
