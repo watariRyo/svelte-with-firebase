@@ -17,6 +17,7 @@ export const loginWithGoogle = async (): Promise<User> => {
 
 export const logout = async () => {
 	await signOut(getAuth());
+	await fetch('/logout');
 };
 
 export const registerWithEmailAndPassword = async (
