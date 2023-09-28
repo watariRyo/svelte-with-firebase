@@ -68,7 +68,6 @@
 		<input
 			class="form-control form-control-lg"
 			id="main_picture"
-			value={form?.main_picture || ''}
 			class:is-invalid={form?.error_main_picture}
 			accept="image/*"
 			name="main_picture"
@@ -83,7 +82,6 @@
 		<input
 			class="form-control form-control-lg"
 			id="small_picture"
-			value={form?.small_picture || ''}
 			class:is-invalid={form?.error_small_picture}
 			accept="image/*"
 			name="small_picture"

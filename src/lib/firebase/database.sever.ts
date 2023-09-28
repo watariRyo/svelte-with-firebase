@@ -1,0 +1,39 @@
+import { firestore } from 'firebase-admin';
+import type { Book } from '../../models/book';
+import { db } from './firebase.server';
+import { saveFileToBucket } from './firestorage.server';
+
+export const addBook = async (book: Book, userId: string) => {
+	// save to firestore without picture informaition
+	const bookCollection = db.collection('books');
+
+	const bookRef = await bookCollection.add({
+		title: book.title,
+		author: book.author,
+		short_description: book.short_description,
+		description: book.description,
+		user_id: userId,
+		created_at: firestore.Timestamp.now().seconds,
+		updated_at: firestore.Timestamp.now().seconds,
+		likes: 0
+	});
+
+	// save the picutures
+	const smallPictureUrl = await saveFileToBucket(
+		book.small_picture,
+		`${userId}/${bookRef.id}/small_picuture`
+	);
+	const mainPictureUrl = await saveFileToBucket(
+		book.main_picture,
+		`${userId}/${bookRef.id}/main_picuture`
+	);
+
+	// update the document in firestore database with the picuture urls
+	await bookRef.update({
+		main_picture: mainPictureUrl,
+		small_picuture: smallPictureUrl
+	});
+
+	// return book id
+	return bookRef.id;
+};
