@@ -1,5 +1,5 @@
 import { firestore } from 'firebase-admin';
-import type { Book } from '../../models/book';
+import type { Book, BookRef } from '../../models/book';
 import { db } from './firebase.server';
 import { saveFileToBucket } from './firestorage.server';
 
@@ -36,4 +36,20 @@ export const addBook = async (book: Book, userId: string) => {
 
 	// return book id
 	return bookRef.id;
+};
+
+export const getBook = async (id: string) => {
+	const bookRef = await db.collection('books').doc(id).get();
+
+	if (bookRef.exists) {
+		const book: BookRef = {
+			title: bookRef.data()?.title,
+			author: bookRef.data()?.author,
+			description: bookRef.data()?.description,
+			short_description: bookRef.data()?.short_description,
+			main_picture: bookRef.data()?.main_picture,
+			small_picture: bookRef.data()?.small_picture
+		};
+		return { id: bookRef.id, ...book };
+	}
 };
