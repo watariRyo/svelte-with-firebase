@@ -6,7 +6,6 @@
 
 	onMount(async () => {
 		const token = await getAuth().currentUser?.getIdToken(true);
-		console.log(token, 'jwt');
 	});
 </script>
 

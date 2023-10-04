@@ -9,7 +9,7 @@ interface validateBookForm {
 	small_picture?: FormDataEntryValue | null;
 }
 
-const validate = async (formData: FormData) => {
+const validate = async (formData: FormData, edit = false) => {
 	const schema = yup.object({
 		title: yup.string().required('Book title is required').min(4).max(20),
 		author: yup.string().required().min(5).max(200),
@@ -17,10 +17,16 @@ const validate = async (formData: FormData) => {
 		description: yup.string().required().min(5).max(4500),
 		small_picture: yup
 			.mixed()
-			.required()
+			.nullable()
+			.test('fileRequired', 'small picture required', (value) => {
+				return value !== null || edit;
+			})
 			.test('fileType', 'The file must be an image', (value) => {
 				if (value) {
 					const file = value as File;
+					if (file.size === 0 && edit) {
+						return true;
+					}
 					return ['image/png', 'image/jpeg'].includes(file.type);
 				}
 				return true;
@@ -34,10 +40,16 @@ const validate = async (formData: FormData) => {
 			}),
 		main_picture: yup
 			.mixed()
-			.required()
+			.nullable()
+			.test('fileRequired', 'main picture required', (value) => {
+				return value !== null || edit;
+			})
 			.test('fileType', 'The file must be an image', (value) => {
 				if (value) {
 					const file = value as File;
+					if (file.size === 0 && edit) {
+						return true;
+					}
 					return ['image/png', 'image/jpeg'].includes(file.type);
 				}
 				return true;
@@ -71,8 +83,6 @@ const validate = async (formData: FormData) => {
 			}
 			return agg;
 		}, {});
-
-		console.log(error);
 
 		delete data.main_picture;
 		delete data.small_picture;

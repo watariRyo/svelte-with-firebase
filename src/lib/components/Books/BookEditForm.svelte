@@ -10,13 +10,13 @@
 			type="text"
 			name="title"
 			class="form-control is-invalid"
-			value={form?.book.title || ''}
-			class:is-invalid={form?.errors?.error_title}
+			value={form?.form?.book.title || form?.book.title || ''}
+			class:is-invalid={form?.form?.errors?.error_title}
 			id="title"
 			placeholder="Book Title"
 		/>
-		{#if form?.errors?.error_title}
-			<div class="invalid-feedback">{form?.errors?.error_title}</div>
+		{#if form?.form?.errors?.error_title}
+			<div class="invalid-feedback">{form?.form?.errors?.error_title}</div>
 		{/if}
 	</div>
 	<div class="mb-3">
@@ -25,13 +25,13 @@
 			type="text"
 			name="author"
 			class="form-control"
-			value={form?.book.author || ''}
-			class:is-invalid={form?.errors?.error_author}
+			value={form?.form?.book.author || form?.book.author || ''}
+			class:is-invalid={form?.form?.errors?.error_author}
 			id="author"
 			placeholder="Author"
 		/>
-		{#if form?.errors?.error_author}
-			<div class="invalid-feedback">{form?.errors?.error_author}</div>
+		{#if form?.form?.errors?.error_author}
+			<div class="invalid-feedback">{form?.form?.errors?.error_author}</div>
 		{/if}
 	</div>
 	<div class="mb-3">
@@ -40,13 +40,13 @@
 			type="text"
 			name="short_description"
 			class="form-control"
-			value={form?.book.short_description || ''}
-			class:is-invalid={form?.errors?.error_short_description}
+			value={form?.form?.book.short_description || form?.book.short_description || ''}
+			class:is-invalid={form?.form?.errors?.error_short_description}
 			id="short_description"
 			placeholder="Enter short description"
 		/>
-		{#if form?.errors?.error_short_description}
-			<div class="invalid-feedback">{form?.errors?.error_short_description}</div>
+		{#if form?.form?.errors?.error_short_description}
+			<div class="invalid-feedback">{form?.form?.errors?.error_short_description}</div>
 		{/if}
 	</div>
 	<div class="mb-3">
@@ -54,14 +54,14 @@
 		<textarea
 			class="form-control"
 			placeholder="Book Description here"
-			value={form?.book.description || ''}
-			class:is-invalid={form?.errors?.error_description}
+			value={form?.form?.book.description || form?.book.description || ''}
+			class:is-invalid={form?.form?.errors?.error_description}
 			id="description"
 			name="description"
 			style="height: 100px"
 		/>
-		{#if form?.errors?.error_description}
-			<div class="invalid-feedback">{form?.errors?.error_description}</div>
+		{#if form?.form?.errors?.error_description}
+			<div class="invalid-feedback">{form?.form?.errors?.error_description}</div>
 		{/if}
 	</div>
 	<div class="mb-3">
@@ -69,13 +69,13 @@
 		<input
 			class="form-control form-control-lg"
 			id="main_picture"
-			class:is-invalid={form?.errors?.error_main_picture}
+			class:is-invalid={form?.form?.errors?.error_main_picture}
 			accept="image/*"
 			name="main_picture"
 			type="file"
 		/>
-		{#if form?.errors?.error_main_picture}
-			<div class="invalid-feedback">{form?.errors?.error_main_picture}</div>
+		{#if form?.form?.errors?.error_main_picture}
+			<div class="invalid-feedback">{form?.form?.errors?.error_main_picture}</div>
 		{/if}
 	</div>
 	<div class="mb-3">
@@ -83,13 +83,13 @@
 		<input
 			class="form-control form-control-lg"
 			id="small_picture"
-			class:is-invalid={form?.errors?.error_small_picture}
+			class:is-invalid={form?.form?.errors?.error_small_picture}
 			accept="image/*"
 			name="small_picture"
 			type="file"
 		/>
-		{#if form?.errors?.error_small_picture}
-			<div class="invalid-feedback">{form?.errors?.error_small_picture}</div>
+		{#if form?.form?.errors?.error_small_picture}
+			<div class="invalid-feedback">{form?.form?.errors?.error_small_picture}</div>
 		{/if}
 	</div>
 	<button type="submit" class="btn btn-primary w-100"> Submit </button>

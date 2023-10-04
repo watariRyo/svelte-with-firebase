@@ -1,6 +1,9 @@
 <script lang="ts">
 	export let data;
 	const book = data.book;
+
+	// clear img cache
+	const rnd = Math.floor(Math.random() * 9999);
 </script>
 
 <div class="row mt-3">
@@ -15,7 +18,7 @@
 </div>
 <div class="row">
 	<div class="col">
-		<img class="main-image" src={book.main_picture} alt={book.title} />
+		<img class="main-image" src="{book.main_picture}?{rnd}" alt={book.title} />
 	</div>
 </div>
 <div class="row mt-3">
