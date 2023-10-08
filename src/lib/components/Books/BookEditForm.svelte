@@ -1,15 +1,25 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+
 	export let form: any;
+	let submitting = false;
+
+	$: if (form && form.success === false) {
+		submitting = false;
+	}
+
+	const submitForm = (e: SubmitEvent) => {
+		submitting = true;
+	};
 </script>
 
-<!-- TODO: FIX Not receiving error json correctly when editing -->
-<form enctype="multipart/form-data" method="POST">
+<form enctype="multipart/form-data" method="POST" use:enhance on:submit={submitForm}>
 	<div class="mb-3">
 		<label for="title" class="form-label">Book Title</label>
 		<input
 			type="text"
 			name="title"
-			class="form-control is-invalid"
+			class="form-control"
 			value={form?.form?.book.title || form?.book.title || ''}
 			class:is-invalid={form?.form?.errors?.error_title}
 			id="title"
@@ -92,5 +102,11 @@
 			<div class="invalid-feedback">{form?.form?.errors?.error_small_picture}</div>
 		{/if}
 	</div>
-	<button type="submit" class="btn btn-primary w-100"> Submit </button>
+	<button disabled={submitting} type="submit" class="btn btn-primary w-100">
+		{#if submitting}
+			Submitting...
+		{:else}
+			Submit
+		{/if}
+	</button>
 </form>
