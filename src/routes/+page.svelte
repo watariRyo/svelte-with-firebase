@@ -1,12 +1,8 @@
 <script lang="ts">
-	import { getAuth } from 'firebase/auth';
 	import { onMount } from 'svelte';
 
-	export let data;
-
 	onMount(async () => {
-		const token = await getAuth().currentUser?.getIdToken(true);
+		const response = await fetch('/like/XoJb03EdrpsdvaRAzE3l');
+		const json = await response.json();
 	});
 </script>
-
-<h1>Num of users: {data.count}</h1>

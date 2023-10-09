@@ -89,3 +89,30 @@ export const getBook = async (id: string) => {
 		return { id: bookRef.id, ...book };
 	}
 };
+
+export const toggleBookLike = async (bookId: string, userId: string) => {
+	const bookDoc = db.collection('books').doc(bookId);
+
+	const userDoc = db.collection('users').doc(userId);
+
+	const user = await userDoc.get();
+	const userData = user.data();
+
+	if (userData && userData.bookIds && userData.bookIds.include(bookId)) {
+		await userDoc.update({
+			bookIds: firestore.FieldValue.arrayRemove(bookId)
+		});
+		await bookDoc.update({
+			likes: firestore.FieldValue.increment(-1)
+		});
+	} else {
+		await userDoc.update({
+			bookIds: firestore.FieldValue.arrayUnion(bookId)
+		});
+		await bookDoc.update({
+			likes: firestore.FieldValue.increment(1)
+		});
+	}
+
+	return await getBook(bookId);
+};
