@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Like from '$lib/components/Books/Like.svelte';
+
 	export let data;
 	const book = data.book;
 
@@ -24,6 +26,11 @@
 <div class="row mt-3">
 	<div class="col">
 		<pre>{book.description}</pre>
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<Like {book} />
 	</div>
 </div>
 

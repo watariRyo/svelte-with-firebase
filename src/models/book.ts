@@ -15,4 +15,6 @@ export type BookRef = {
 	main_picture: string;
 	small_picture: string;
 	user_id: string;
+	likes: number;
+	likeBook: boolean;
 };

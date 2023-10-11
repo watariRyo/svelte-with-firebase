@@ -73,10 +73,13 @@ export const editBook = async (id: string, book: Book, userId: string) => {
 	}
 };
 
-export const getBook = async (id: string) => {
+export const getBook = async (id: string, userId: string | null = null) => {
 	const bookRef = await db.collection('books').doc(id).get();
 
 	if (bookRef.exists) {
+		const user = userId ? await getUser(userId) : null;
+		const likeBook = user?.bookIds?.includes(id) || false;
+
 		const book: BookRef = {
 			title: bookRef.data()?.title,
 			author: bookRef.data()?.author,
@@ -84,10 +87,18 @@ export const getBook = async (id: string) => {
 			short_description: bookRef.data()?.short_description,
 			main_picture: bookRef.data()?.main_picture,
 			small_picture: bookRef.data()?.small_picture,
-			user_id: bookRef.data()?.user_id
+			user_id: bookRef.data()?.user_id,
+			likes: bookRef.data()?.likes,
+			likeBook: likeBook
 		};
 		return { id: bookRef.id, ...book };
 	}
+};
+
+export const getUser = async (userId: string) => {
+	const user = await db.collection('users').doc(userId).get();
+
+	return user?.data();
 };
 
 export const toggleBookLike = async (bookId: string, userId: string) => {
