@@ -8,6 +8,7 @@ export type Book = {
 };
 
 export type BookRef = {
+	id: string;
 	title: string;
 	author: string;
 	description: string;

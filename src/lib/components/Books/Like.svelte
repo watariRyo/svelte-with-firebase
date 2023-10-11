@@ -1,12 +1,27 @@
 <script lang="ts">
+	import messagesStore from '$lib/stores/messages.store';
 	import type { BookRef } from '../../../models/book';
 
 	export let book: BookRef;
+	let submitting = false;
+	export let textAlign = 'left';
+
+	const toggleLike = async () => {
+		try {
+			submitting = true;
+			const response = await fetch(`/like/${book.id}`);
+			book = await response.json();
+		} catch (e) {
+			messagesStore.showError();
+		}
+		submitting = false;
+	};
 </script>
 
-<div style="text-align: left" class="like">
-	<!-- <img src="/loading.gif" alt="" /> -->
-	{#if book.likeBook}
+<div style="text-align: {textAlign}" class="like">
+	{#if submitting}
+		<img src="/loading.gif" alt="" />
+	{:else if book.likeBook}
 		<span>{book.likes}</span>
 		<!-- svelte-ignore missing-declaration -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -17,6 +32,7 @@
 			fill="currentColor"
 			class="bi bi-arrow-through-heart-fill"
 			viewBox="0 0 16 16"
+			on:click={toggleLike}
 		>
 			<path
 				fill-rule="evenodd"
@@ -34,6 +50,7 @@
 			fill="currentColor"
 			class="bi bi-arrow-through-heart"
 			viewBox="0 0 16 16"
+			on:click={toggleLike}
 		>
 			<path
 				fill-rule="evenodd"

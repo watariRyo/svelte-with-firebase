@@ -81,6 +81,7 @@ export const getBook = async (id: string, userId: string | null = null) => {
 		const likeBook = user?.bookIds?.includes(id) || false;
 
 		const book: BookRef = {
+			id: id,
 			title: bookRef.data()?.title,
 			author: bookRef.data()?.author,
 			description: bookRef.data()?.description,
@@ -91,7 +92,7 @@ export const getBook = async (id: string, userId: string | null = null) => {
 			likes: bookRef.data()?.likes,
 			likeBook: likeBook
 		};
-		return { id: bookRef.id, ...book };
+		return { ...book };
 	}
 };
 
@@ -109,7 +110,7 @@ export const toggleBookLike = async (bookId: string, userId: string) => {
 	const user = await userDoc.get();
 	const userData = user.data();
 
-	if (userData && userData.bookIds && userData.bookIds.include(bookId)) {
+	if (userData && userData.bookIds && userData.bookIds.includes(bookId)) {
 		await userDoc.update({
 			bookIds: firestore.FieldValue.arrayRemove(bookId)
 		});
