@@ -38,6 +38,30 @@ export const addBook = async (book: Book, userId: string) => {
 	return bookRef.id;
 };
 
+export const getBooks = async (userId: string) => {
+	const user = userId ? await getUser(userId) : null;
+
+	const books = await db.collection('books').limit(5).orderBy('created_at', 'desc').get();
+
+	const likeBooks = books.docs.map((d) => {
+		const likeBook = user?.bookIds?.includes(d.id) || false;
+		const book: BookRef = {
+			id: d.id,
+			title: d.data()?.title,
+			author: d.data()?.author,
+			description: d.data()?.description,
+			short_description: d.data()?.short_description,
+			main_picture: d.data()?.main_picture,
+			small_picture: d.data()?.small_picture,
+			user_id: d.data()?.user_id,
+			likes: d.data()?.likes,
+			likeBook: likeBook
+		};
+		return book;
+	});
+	return likeBooks;
+};
+
 export const editBook = async (id: string, book: Book, userId: string) => {
 	const bookRef = await db.collection('books').doc(id);
 	let mainPicture = book.main_picture || null;

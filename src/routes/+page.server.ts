@@ -1,8 +1,8 @@
-import { db } from '$lib/firebase/firebase.server';
+import { getBooks } from '$lib/firebase/database.sever';
 
-export const load = async () => {
-	const count = await db.collection('users').count().get();
+export const load = async ({ locals }) => {
+	const books = await getBooks(locals?.user?.id);
 	return {
-		count: count.data().count
+		books
 	};
 };
