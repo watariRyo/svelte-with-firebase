@@ -1,12 +1,16 @@
 <script lang="ts">
 	import messagesStore from '$lib/stores/messages.store';
 	import type { BookRef } from '../../../models/book';
+	import authStore from '$lib/stores/auth.store';
 
 	export let book: BookRef;
 	let submitting = false;
 	export let textAlign = 'left';
 
 	const toggleLike = async () => {
+		if (!$authStore.isLoggedIn) {
+			return;
+		}
 		try {
 			submitting = true;
 			const response = await fetch(`/like/${book.id}`);
@@ -33,6 +37,7 @@
 			class="bi bi-arrow-through-heart-fill"
 			viewBox="0 0 16 16"
 			on:click={toggleLike}
+			class:not-logged-in={$authStore.isLoggedIn}
 		>
 			<path
 				fill-rule="evenodd"
@@ -51,6 +56,7 @@
 			class="bi bi-arrow-through-heart"
 			viewBox="0 0 16 16"
 			on:click={toggleLike}
+			class:not-logged-in={$authStore.isLoggedIn}
 		>
 			<path
 				fill-rule="evenodd"
@@ -72,5 +78,8 @@
 	}
 	.like span {
 		font-size: 20px;
+	}
+	.not-logged-in {
+		cursor: not-allowed;
 	}
 </style>
