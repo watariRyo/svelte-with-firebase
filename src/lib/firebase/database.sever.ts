@@ -2,6 +2,7 @@ import { firestore } from 'firebase-admin';
 import type { Book, BookRef } from '../../models/book';
 import { db } from './firebase.server';
 import { saveFileToBucket } from './firestorage.server';
+import { PUBLIC_PAGE_SIZE } from '$env/static/public';
 
 export const addBook = async (book: Book, userId: string) => {
 	// save to firestore without picture informaition
@@ -38,10 +39,23 @@ export const addBook = async (book: Book, userId: string) => {
 	return bookRef.id;
 };
 
-export const getBooks = async (userId: string) => {
+export const getBooks = async (userId: string, page = 1) => {
 	const user = userId ? await getUser(userId) : null;
 
-	const books = await db.collection('books').limit(5).orderBy('created_at', 'desc').get();
+	const bookCount = await db.collection('books').count().get();
+	const totalBooks = bookCount.data().count;
+
+	console.log(PUBLIC_PAGE_SIZE);
+
+	const next = totalBooks > page * +PUBLIC_PAGE_SIZE;
+	const previous = page > 1;
+
+	const books = await db
+		.collection('books')
+		.limit(+PUBLIC_PAGE_SIZE)
+		.offset((page - 1) * +PUBLIC_PAGE_SIZE)
+		.orderBy('created_at', 'desc')
+		.get();
 
 	const likeBooks = books.docs.map((d) => {
 		const likeBook = user?.bookIds?.includes(d.id) || false;
@@ -59,7 +73,7 @@ export const getBooks = async (userId: string) => {
 		};
 		return book;
 	});
-	return likeBooks;
+	return { books: likeBooks, next, previous };
 };
 
 export const editBook = async (id: string, book: Book, userId: string) => {
