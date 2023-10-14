@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import Book from '$lib/components/Books/Book.svelte';
 	import messagesStore from '$lib/stores/messages.store.js';
 
 	export let data;
@@ -21,11 +22,16 @@
 	};
 </script>
 
-<ul>
-	{#each data.books as book (book.id)}
-		<li>{book.title}</li>
-	{/each}
-</ul>
+<div class="row">
+	<div class="col">
+		<h1>Latest Books</h1>
+		<h3>Page: {data.page}</h3>
+	</div>
+</div>
+
+{#each data.books as book (book.id)}
+	<Book {book} />
+{/each}
 
 <div class="row">
 	<div class="col">
