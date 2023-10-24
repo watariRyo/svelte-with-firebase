@@ -1,12 +1,18 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { BookRef } from '../../../models/book';
 	import Like from './Like.svelte';
 
 	export let book: BookRef;
+
+	const goToBookPage = async () => {
+		goto(`/book/${book.id}`);
+	};
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="row mt-2">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div on:click={goToBookPage} class="row mt-2">
 	<div class="col col-12 col-sm-6 col-md-4">
 		<img src={book.small_picture} alt={book.title} />
 	</div>
