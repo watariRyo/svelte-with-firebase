@@ -71,8 +71,6 @@ export const getBooks = async (userId: string, page = 1) => {
 	const bookCount = await db.collection('books').count().get();
 	const totalBooks = bookCount.data().count;
 
-	console.log(PUBLIC_PAGE_SIZE);
-
 	const next = totalBooks > page * +PUBLIC_PAGE_SIZE;
 	const previous = page > 1;
 
@@ -114,14 +112,11 @@ export const editBook = async (id: string, book: Book, userId: string) => {
 		updated_at: firestore.Timestamp.now().seconds
 	});
 
-	console.log(mainPicture);
 	if (mainPicture && mainPicture.size > 0) {
-		console.log('mainPicture update');
 		const mainPictureUrl = await saveFileToBucket(
 			mainPicture,
 			`${userId}/${bookRef.id}/main_picuture`
 		);
-		console.log(mainPictureUrl);
 		await bookRef.update({
 			main_picture: mainPictureUrl
 		});
@@ -144,6 +139,12 @@ export const getBook = async (id: string, userId: string | null = null) => {
 		const user = userId ? await getUser(userId) : null;
 		const likeBook = user?.bookIds?.includes(id) || false;
 
+		console.log(user);
+		console.log(userId);
+		console.log(likeBook);
+		console.log(user?.bookIds);
+		console.log(id);
+
 		const book: BookRef = {
 			id: id,
 			title: bookRef.data()?.title,
@@ -158,6 +159,36 @@ export const getBook = async (id: string, userId: string | null = null) => {
 		};
 		return { ...book };
 	}
+};
+
+export const getLikeBooks = async (userId: string) => {
+	const user = await getUser(userId);
+	const bookIds = (user?.bookIds || []) as string[];
+
+	if (bookIds.length === 0) {
+		return [];
+	}
+
+	const books = await db
+		.collection('books')
+		.where(firestore.FieldPath.documentId(), 'in', bookIds)
+		.get();
+
+	return books.docs.map((d) => {
+		const book: BookRef = {
+			id: d.id,
+			title: d.data()?.title,
+			author: d.data()?.author,
+			description: d.data()?.description,
+			short_description: d.data()?.short_description,
+			main_picture: d.data()?.main_picture,
+			small_picture: d.data()?.small_picture,
+			user_id: d.data()?.user_id,
+			likes: d.data()?.likes,
+			likeBook: true
+		};
+		return book;
+	});
 };
 
 export const getUser = async (userId: string) => {
@@ -190,5 +221,5 @@ export const toggleBookLike = async (bookId: string, userId: string) => {
 		});
 	}
 
-	return await getBook(bookId);
+	return await getBook(bookId, userId);
 };

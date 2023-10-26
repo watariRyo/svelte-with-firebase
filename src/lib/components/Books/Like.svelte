@@ -2,12 +2,16 @@
 	import messagesStore from '$lib/stores/messages.store';
 	import type { BookRef } from '../../../models/book';
 	import authStore from '$lib/stores/auth.store';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
 
 	export let book: BookRef;
 	let submitting = false;
 	export let textAlign = 'left';
 
-	const toggleLike = async () => {
+	const toggleLike = async (e: Event) => {
+		e.stopPropagation();
 		if (!$authStore.isLoggedIn) {
 			return;
 		}
@@ -15,6 +19,7 @@
 			submitting = true;
 			const response = await fetch(`/like/${book.id}`);
 			book = await response.json();
+			dispatch('toggle_like', { id: book.id });
 		} catch (e) {
 			messagesStore.showError();
 		}
@@ -29,6 +34,7 @@
 		<span>{book.likes}</span>
 		<!-- svelte-ignore missing-declaration -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="16"
@@ -36,7 +42,7 @@
 			fill="currentColor"
 			class="bi bi-arrow-through-heart-fill"
 			viewBox="0 0 16 16"
-			on:click={toggleLike}
+			on:click|stopPropagation={toggleLike}
 			class:not-logged-in={$authStore.isLoggedIn}
 		>
 			<path
@@ -48,6 +54,7 @@
 		<!-- NOT LIKE -->
 		<span>{book.likes}</span>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="16"
@@ -55,7 +62,7 @@
 			fill="currentColor"
 			class="bi bi-arrow-through-heart"
 			viewBox="0 0 16 16"
-			on:click={toggleLike}
+			on:click|stopPropagation={toggleLike}
 			class:not-logged-in={$authStore.isLoggedIn}
 		>
 			<path

@@ -20,7 +20,7 @@
 		<h2>Title: {book.title}</h2>
 		<h2>Author: {book.author}</h2>
 		<p>{book.short_description}</p>
-		<Like {book} />
+		<Like {book} on:toggle_like />
 	</div>
 </div>
 
