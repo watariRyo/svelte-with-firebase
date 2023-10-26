@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import authStore from '$lib/stores/auth.store';
 	import { logout } from '$lib/firebase/auth.client';
 	import messagesStore from '$lib/stores/messages.store';
 	import { goto } from '$app/navigation';
+
+	export let isLoggedIn: boolean;
 
 	let isOpen = false;
 	const toggleMenu = () => {
@@ -38,7 +39,7 @@
 		</button>
 		<div class:show={isOpen} class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav">
-				{#if $authStore.isLoggedIn}
+				{#if isLoggedIn}
 					<li class="nav-item">
 						<a
 							class:active={$page.url.pathname === '/'}
@@ -62,6 +63,8 @@
 						>
 					</li>
 					<li class="nav-item">
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<span on:click={onLogout} class="nav-link">Logout</span>
 					</li>
 				{:else}

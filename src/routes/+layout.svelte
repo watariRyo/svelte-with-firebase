@@ -6,6 +6,13 @@
 	import messageStore from '$lib/stores/messages.store';
 	import { onMount } from 'svelte';
 	import { sendJWTToken } from '$lib/firebase/auth.client';
+	import authStore from '$lib/stores/auth.store.js';
+
+	export let data;
+
+	let isLoggedIn = data.isLoggedIn;
+
+	$: isLoggedIn = $authStore.isActive ? $authStore.isLoggedIn : data.isLoggedIn;
 
 	let timerId: string | number | NodeJS.Timeout | undefined;
 
@@ -36,7 +43,7 @@
 	};
 </script>
 
-<Nav />
+<Nav {isLoggedIn} />
 <main class="container">
 	{#if $messageStore.show}
 		<div class="row mt-3">

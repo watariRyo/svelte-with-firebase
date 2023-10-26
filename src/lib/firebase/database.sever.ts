@@ -139,12 +139,6 @@ export const getBook = async (id: string, userId: string | null = null) => {
 		const user = userId ? await getUser(userId) : null;
 		const likeBook = user?.bookIds?.includes(id) || false;
 
-		console.log(user);
-		console.log(userId);
-		console.log(likeBook);
-		console.log(user?.bookIds);
-		console.log(id);
-
 		const book: BookRef = {
 			id: id,
 			title: bookRef.data()?.title,

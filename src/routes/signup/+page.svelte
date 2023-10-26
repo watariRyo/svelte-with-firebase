@@ -4,7 +4,7 @@
 	import AuthForm from '$lib/components/Auth/AuthForm.svelte';
 	import LoginWithGoogle from '$lib/components/Auth/LoginWithGoogle.svelte';
 	import { registerWithEmailAndPassword } from '$lib/firebase/auth.client';
-	import { afterLogin } from '$lib/helpers/route.helper';
+	import { afterRegist } from '$lib/helpers/route.helper';
 	import messagesStore from '$lib/stores/messages.store';
 
 	// TODO: Event型のanyのFix
@@ -23,7 +23,7 @@
 			}
 			const user = await registerWithEmailAndPassword(email, password);
 			messagesStore.hide();
-			await afterLogin($page.url, user.uid);
+			await afterRegist($page.url, user.uid);
 		} catch (error: any) {
 			if (error.code === 'auth/email-already-in-use') {
 				messagesStore.showError('You have already registered, please log in.');
@@ -44,7 +44,7 @@
 <hr />
 <AuthForm on:submit={register} btnName="Sign Up" />
 <hr />
-<LoginWithGoogle />
+<LoginWithGoogle isSignup={true} />
 
 <svelte:head>
 	<title>Book Lovers - Sign Up</title>

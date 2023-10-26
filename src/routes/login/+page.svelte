@@ -32,7 +32,7 @@
 </div>
 <AuthForm on:submit={onLogin} btnName="Login" />
 <hr />
-<LoginWithGoogle />
+<LoginWithGoogle isSignup={false} />
 <hr />
 <div class="row">
 	<div class="col">
